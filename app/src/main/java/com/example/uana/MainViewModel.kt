@@ -11,11 +11,13 @@ import com.example.uana.model.Produto
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import retrofit2.Response
+import java.time.LocalDate
 import javax.inject.Inject
 
 @HiltViewModel
 class MainViewModel @Inject constructor
     (private val repository: Repository) : ViewModel() {
+    val dataSelecionada = MutableLiveData<LocalDate>()
 
     private val _myCategoriaResponse =
         MutableLiveData<Response<List<Categoria>>>()

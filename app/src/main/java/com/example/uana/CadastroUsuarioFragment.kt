@@ -6,12 +6,17 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import com.example.uana.databinding.FragmentCadastrousuario1Binding
+import com.example.uana.fragment.DatePickerFragment
+import com.example.uana.fragment.TimerPickerListener
+import java.time.LocalDate
 
-class CadastroUsuarioFragment : Fragment() {
+class CadastroUsuarioFragment : Fragment(), TimerPickerListener {
 
     private lateinit var binding : FragmentCadastrousuario1Binding
+    private val mainViewModel: MainViewModel by activityViewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -20,6 +25,11 @@ class CadastroUsuarioFragment : Fragment() {
         // Inflate the layout for this fragment
 
     binding = FragmentCadastrousuario1Binding.inflate(layoutInflater, container, false)
+
+    mainViewModel.dataSelecionada.value = LocalDate.now()
+    mainViewModel.dataSelecionada.observe(viewLifecycleOwner){
+        selectDate -> binding.editdataNasc.setText(selectDate.toString())
+    }
 
     nomeCompletoFocusListener()
     emailFocusListener()
@@ -33,6 +43,11 @@ class CadastroUsuarioFragment : Fragment() {
 
     binding.buttonVoltar.setOnClickListener {
         findNavController().navigate(R.id.action_cadastroUsuarioFragment_to_loginFragment2)
+    }
+
+    binding.editdataNasc.setOnClickListener {
+        DatePickerFragment(this)
+            .show(parentFragmentManager, "DatePicker")
     }
 
 
@@ -132,5 +147,9 @@ class CadastroUsuarioFragment : Fragment() {
             return "Deve conter 11 numeros!"
         }
     return null
+    }
+
+    override fun onDateSelected(date: LocalDate) {
+        mainViewModel.dataSelecionada.value = date
     }
 }
